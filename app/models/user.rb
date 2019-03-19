@@ -1,13 +1,14 @@
 class User < ApplicationRecord
-  has_many :projects
+  has_many :user_projects
+  has_many :projects, through: :user_projects
 
-  def create_new_project(mp_id)
+
+  def create_new_project(mp_id:)
     self.projects.create(mp_id: mp_id, head: true)
   end
 
-  def to_dos
-    https://www.mountainproject.com/data/get-to-dos?email=minesja@gmail.com&key=111320891-1dce0c8fa4b502af9a6e837e67101cc9
+  def add_project_children(mp_id:, parent_id:)
+    self.projects.create(parent_id: parent_id, mp_id: mp_id)
   end
-
 
 end
