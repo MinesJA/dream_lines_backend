@@ -2,11 +2,10 @@ class Api::V1::UsersController < ApplicationController
 
 
   def create
-    resp = RestClient.get("#{MP_BASE_URL}/get-user?email=#{users_params[:email]}&key=#{MP_KEY}")
-    @user = JSON.parse(resp)
+    mp_user = fetch_user(users_params[:email])
 
     if(@user)
-      User.create(mp_id: @user.id, email: users_params[:email])
+      @user = User.create(mp_id: mp_user.id, email: users_params[:email])
       render json: @user
     else
       render json: {error: "No user found on Mountain Project"}
@@ -26,27 +25,23 @@ class Api::V1::UsersController < ApplicationController
   end
 
 
-  def add_steps
+  def add_children
     user = User.find(users_params[:id])
 
     if(user)
       @step = user.add_project_children(mp_id: user_params[:mp_id], parent_id: user_params[:parent_id])
-      render
-
+      render json: @step
     else
-
+      render json: {error: "No user found"}
     end
   end
 
 
   def get_ticks
-    byebug
     user = User.find(users_params[:id])
 
     if(user)
-      resp = RestClient.get("#{MP_BASE_URL}/get-ticks?email=#{user.email}&key=#{MP_KEY}")
-      @routes = JSON.parse(resp)['routes']
-
+      @routes = fetch_ticks(user.email)
       render json: @routes
     else
       render json: {error: "No user found in database"}
@@ -58,9 +53,7 @@ class Api::V1::UsersController < ApplicationController
     user = User.find(users_params[:id])
 
     if(user)
-      resp = RestClient.get("#{MP_BASE_URL}/get-to-dos?email=#{user.email}&key=#{MP_KEY}")
-      @routes = JSON.parse(resp)['routes']
-
+      @routes = fetch_todos(user.email)
       render json: @routes
     else
       render json: {error: "No user found in database"}
@@ -70,6 +63,6 @@ class Api::V1::UsersController < ApplicationController
   private
 
   def users_params
-    params.permit(:id, :email, :mp_id, :)
+    params.permit(:id, :email, :mp_id)
   end
 end

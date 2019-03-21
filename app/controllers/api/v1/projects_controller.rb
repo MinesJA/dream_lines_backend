@@ -15,10 +15,10 @@ class Api::V1::ProjectsController < ApplicationController
   end
 
 
-
-  def add_step
-
+  def add_child
+    
   end
+
 
   def fetch_children
     @project = Project.find(project_params[:mp_id])
