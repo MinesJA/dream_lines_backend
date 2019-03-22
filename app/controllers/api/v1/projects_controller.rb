@@ -11,7 +11,6 @@ class Api::V1::ProjectsController < ApplicationController
     else
       render json: {error: "No user found"}
     end
-
   end
 
 
