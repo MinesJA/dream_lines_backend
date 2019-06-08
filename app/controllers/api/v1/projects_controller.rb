@@ -13,9 +13,32 @@ class Api::V1::ProjectsController < ApplicationController
     end
   end
 
+  def create_project
+    user = User.find(users_params[:id])
+
+    if(user)
+      @project = user.create_new_project(mp_id: user_parms[:mp_id])
+      render json: @project
+    else
+      render json: {error: "No user found"}
+    end
+  end
+
+
+  def add_children
+    user = User.find(users_params[:id])
+
+    if(user)
+      @step = user.add_project_children(mp_id: user_params[:mp_id], parent_id: user_params[:parent_id])
+      render json: @step
+    else
+      render json: {error: "No user found"}
+    end
+  end
+
 
   def add_child
-    
+
   end
 
 

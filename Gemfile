@@ -23,6 +23,8 @@ gem 'puma', '~> 3.11'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+gem 'fast_jsonapi'
+
 gem 'rest-client'
 
 # Reduces boot times through caching; required in config/boot.rb
@@ -38,6 +40,7 @@ group :development, :test do
   gem 'cucumber-rails', require: false
   gem 'shoulda-matchers', git: 'https://github.com/thoughtbot/shoulda-matchers.git', branch: 'rails-5'
   gem 'factory_bot_rails'
+  gem 'awesome_print'
 end
 
 group :development do

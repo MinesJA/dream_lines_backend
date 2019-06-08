@@ -5,6 +5,9 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      resources :users, only: [:create, :show]
+
+
       resources :projects, only: [:create]
       get '/get_routes', to: 'routes#get_routes'
       get '/get_ticks', to: 'users#get_ticks'

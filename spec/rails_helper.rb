@@ -30,6 +30,7 @@ rescue ActiveRecord::PendingMigrationError => e
   puts e.to_s.strip
   exit 1
 end
+
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
@@ -59,30 +60,31 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
-  Shoulda::Matchers.configure do |config|
-    config.integrate do |with|
-      with.test_framework :rspec
+  config.before(:suite) do
+    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.clean_with(:truncation)
+  end
 
-      with.library :active_record
-      with.library :active_model
-      with.library :action_controller
-      with.library :rails
+  config.before(:each) do
+    DatabaseCleaner.start
+  end
+
+  config.around(:each) do |example|
+    DatabaseCleaner.cleaning do
+      example.run
     end
   end
 
-  RSpec.configure do |config|
+end
 
-    config.before(:suite) do
-      DatabaseCleaner.strategy = :transaction
-      DatabaseCleaner.clean_with(:truncation)
-    end
 
-    config.around(:each) do |example|
-      DatabaseCleaner.cleaning do
-        example.run
-      end
-    end
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
 
+    with.library :active_record
+    with.library :active_model
+    with.library :action_controller
+    with.library :rails
   end
-
 end
